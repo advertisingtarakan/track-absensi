@@ -121,81 +121,64 @@
         color: #5a5f7a;
       }
 
-      /* Leaderboard */
-      #leaderboard {
-        position: relative;
-        padding-bottom: 12px;
-      }
+     /* Tambah jarak antara catatan/filter dengan leaderboard */
+#leaderboard {
+  position: relative;
+  padding-top: 10px; /* <-- ini bikin tidak terlalu mepet */
+  padding-bottom: 12px;
+}
 
-      .ribbon {
-        height: 54px;
-        background: #5c5be5;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        box-shadow: 0px 15px 11px -6px #7a7a7d;
-      }
+/* Ribbon turun sedikit biar ada ruang */
+.ribbon {
+  height: 54px;
+  background: #5c5be5;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 10px; /* <-- sebelumnya 0 */
+  box-shadow: 0px 15px 11px -6px #7a7a7d;
+}
 
-      .ribbon::before,
-      .ribbon::after {
-        content: "";
-        height: 14px;
-        width: 14px;
-        bottom: -7px;
-        position: absolute;
-        transform: rotate(45deg);
-        background: #5c5be5;
-        z-index: -1;
-      }
+/* Karena ribbon turun, table juga turun mengikuti ribbon */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: #141a39;
+  position: relative;
+  z-index: 1;
+  margin-top: 10px; /* <-- mengikuti top ribbon */
+}
 
-      .ribbon::before {
-        left: 14px;
-      }
-      .ribbon::after {
-        right: 14px;
-      }
+/* FIX UTAMA: baris pertama dibuat background biru */
+tbody tr:first-child {
+  background: #5c5be5 !important;
+}
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: fixed;
-        color: #141a39;
-        position: relative;
-        z-index: 1;
-      }
+/* teks baris pertama putih */
+tbody tr:first-child td {
+  color: #fff !important;
+}
 
-      tbody tr {
-        transition: all 0.18s ease-in-out;
-      }
+/* optional: biar baris pertama tidak “membesar” saat hover */
+tbody tr:first-child:hover {
+  transform: none;
+  box-shadow: none;
+  background: #5c5be5;
+}
 
-      tbody tr:nth-child(odd) {
-        background: #f9f9f9;
-      }
+/* biar nomor tetap rapi */
+.number {
+  width: 56px;
+  font-size: 18px;
+  font-weight: 700;
+  /* hapus color: #ffffff dari sini kalau kamu mau nomor selain rank 1 jadi normal */
+}
 
-      tbody tr:hover {
-        background: #fff;
-        transform: scale(1.01);
-        box-shadow: 0px 5px 15px 8px #e4e7fb;
-      }
-
-      td {
-        padding: 14px 18px;
-        font-size: 14px;
-        vertical-align: middle;
-      }
-
-      .number {
-        width: 56px;
-        font-size: 18px;
-        font-weight: 700;
-        color: #ffffff;
-      }
-
-      /* baris #1 kasih warna teks putih karena di atas ribbon */
-      tbody tr:first-child td {
-        color: #fff;
-      }
+/* kalau kamu ingin nomor selain rank 1 balik jadi warna normal, tambahkan ini */
+tbody tr:not(:first-child) .number {
+  color: #141a39;
+}
 
       .name {
         text-align: left;
