@@ -10,7 +10,6 @@
       href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-
     <title>Ranking Keterlambatan</title>
 
     <style>
@@ -44,7 +43,7 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        padding: 18px 18px 12px 18px;
+        padding: 18px 18px 10px 18px;
       }
 
       .titleWrap h1 {
@@ -88,7 +87,7 @@
       #filters {
         display: flex;
         gap: 10px;
-        padding: 0 18px 14px 18px;
+        padding: 0 18px 12px 18px;
         flex-wrap: wrap;
       }
 
@@ -121,68 +120,48 @@
         color: #5a5f7a;
       }
 
-     /* Tambah jarak antara catatan/filter dengan leaderboard */
-#leaderboard {
-  position: relative;
-  padding-top: 10px; /* <-- ini bikin tidak terlalu mepet */
-  padding-bottom: 12px;
-}
+      /* Leaderboard wrapper */
+      #leaderboard {
+        padding: 0 0 12px 0;
+      }
 
-/* Ribbon turun sedikit biar ada ruang */
-.ribbon {
-  height: 54px;
-  background: #5c5be5;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 10px; /* <-- sebelumnya 0 */
-  box-shadow: 0px 15px 11px -6px #7a7a7d;
-}
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        color: #141a39;
+      }
 
-/* Karena ribbon turun, table juga turun mengikuti ribbon */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  color: #141a39;
-  position: relative;
-  z-index: 1;
-  margin-top: 10px; /* <-- mengikuti top ribbon */
-}
+      tbody tr {
+        transition: background 0.15s ease;
+      }
 
-/* FIX UTAMA: baris pertama dibuat background biru */
-tbody tr:first-child {
-  background: #5c5be5 !important;
-}
+      /* baris genap/ganjil */
+      tbody tr:nth-child(odd):not(:first-child) {
+        background: #f9f9f9;
+      }
 
-/* teks baris pertama putih */
-tbody tr:first-child td {
-  color: #fff !important;
-}
+      tbody tr:hover:not(:first-child) {
+        background: #ffffff;
+      }
 
-/* optional: biar baris pertama tidak “membesar” saat hover */
-tbody tr:first-child:hover {
-  transform: none;
-  box-shadow: none;
-  background: #5c5be5;
-}
+      td {
+        padding: 14px 18px;
+        font-size: 14px;
+        vertical-align: middle;
+      }
 
-/* biar nomor tetap rapi */
-.number {
-  width: 56px;
-  font-size: 18px;
-  font-weight: 700;
-  /* hapus color: #ffffff dari sini kalau kamu mau nomor selain rank 1 jadi normal */
-}
-
-/* kalau kamu ingin nomor selain rank 1 balik jadi warna normal, tambahkan ini */
-tbody tr:not(:first-child) .number {
-  color: #141a39;
-}
+      .number {
+        width: 56px;
+        font-size: 18px;
+        font-weight: 700;
+        text-align: left;
+        color: #141a39;
+      }
 
       .name {
         text-align: left;
-        font-weight: 500;
+        font-weight: 600;
         word-break: break-word;
       }
 
@@ -206,9 +185,30 @@ tbody tr:not(:first-child) .number {
         font-size: 16px;
       }
 
+      /* FIX: Baris #1 jadi header bar yang bener (bukan ribbon absolute) */
+      tbody tr:first-child {
+        background: #5c5be5;
+      }
+
+      tbody tr:first-child td {
+        color: #fff;
+      }
+
+      tbody tr:first-child .number {
+        color: #fff;
+      }
+
+      /* Biar sudut atas tabel ikut rounded */
+      tbody tr:first-child td:first-child {
+        border-top-left-radius: 14px;
+      }
+      tbody tr:first-child td:last-child {
+        border-top-right-radius: 14px;
+      }
+
       /* Status */
       #status {
-        padding: 14px 18px 18px 18px;
+        padding: 14px 18px 10px 18px;
         color: #4a4f6a;
         font-size: 13px;
       }
@@ -227,7 +227,6 @@ tbody tr:not(:first-child) .number {
         font-size: 18px;
       }
 
-      /* Mobile tweaks */
       @media (max-width: 520px) {
         td {
           padding: 12px 12px;
@@ -241,10 +240,7 @@ tbody tr:not(:first-child) .number {
           padding: 16px 14px 10px 14px;
         }
         #filters,
-        .hint {
-          padding-left: 14px;
-          padding-right: 14px;
-        }
+        .hint,
         #status {
           padding-left: 14px;
           padding-right: 14px;
@@ -257,7 +253,7 @@ tbody tr:not(:first-child) .number {
     <main>
       <div id="header">
         <div class="titleWrap">
-          <h1>Ranking</h1>
+          <h1>RANKING</h1>
           <p id="subtitle">Ranking Paling Terlambat</p>
         </div>
 
@@ -282,30 +278,21 @@ tbody tr:not(:first-child) .number {
       </div>
 
       <div id="leaderboard">
-        <div class="ribbon"></div>
-
         <table aria-label="Leaderboard">
-          <tbody id="tbody">
-            <!-- diisi JS -->
-          </tbody>
+          <tbody id="tbody"></tbody>
         </table>
-
         <div id="status"></div>
       </div>
     </main>
 
     <script>
-      // Link pubhtml dari kamu
       const PUBHTML_URL =
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2MhRX_p6g3KFPP2W4XJn6g98RbhDdjIPFztK71HafHiZ9WGCLoGZ7pm_X2lPTA-yIizfIxgA2mEVA/pubhtml";
 
-      // Konversi pubhtml -> CSV (lebih mudah di-parse dan biasanya CORS lebih aman)
       function pubhtmlToCsv(url) {
-        // contoh: .../pubhtml  -> .../pub?output=csv
         return url.replace(/\/pubhtml(\?.*)?$/, "/pub?output=csv");
       }
 
-      // CSV parser sederhana (support quoted values)
       function parseCSV(text) {
         const rows = [];
         let row = [];
@@ -344,7 +331,6 @@ tbody tr:not(:first-child) .number {
           if (ch !== "\r") cur += ch;
         }
 
-        // last cell
         if (cur.length > 0 || row.length > 0) {
           row.push(cur);
           rows.push(row);
@@ -364,9 +350,8 @@ tbody tr:not(:first-child) .number {
         return null;
       }
 
-      // State
-      let employees = []; // { name, total }
-      let mode = "terlambat"; // terlambat | rajin
+      let employees = [];
+      let mode = "terlambat";
 
       const tbody = document.getElementById("tbody");
       const statusEl = document.getElementById("status");
@@ -394,8 +379,8 @@ tbody tr:not(:first-child) .number {
         tbody.innerHTML = "";
 
         const sorted = [...employees].sort((a, b) => {
-          if (mode === "terlambat") return b.total - a.total; // terbesar dulu
-          return a.total - b.total; // terkecil dulu
+          if (mode === "terlambat") return b.total - a.total;
+          return a.total - b.total;
         });
 
         sorted.forEach((emp, idx) => {
@@ -451,8 +436,6 @@ tbody tr:not(:first-child) .number {
 
           if (!rows.length) throw new Error("CSV kosong");
 
-          // Cari header row yang punya "NAMA" dan "TOTAL"
-          // (kadang Google Sheet ada baris kosong / judul)
           let headerIndex = -1;
           let nameCol = -1;
           let totalCol = -1;
@@ -469,44 +452,35 @@ tbody tr:not(:first-child) .number {
             }
           }
 
-          if (headerIndex === -1)
-            throw new Error(
-              "Header tidak ditemukan. Pastikan ada kolom NAMA dan TOTAL."
-            );
+          if (headerIndex === -1) {
+            throw new Error("Header tidak ditemukan. Pastikan ada kolom NAMA dan TOTAL.");
+          }
 
-          // Ambil data setelah header
           const dataRows = rows.slice(headerIndex + 1);
 
           const parsed = [];
           for (const r of dataRows) {
             const name = (r[nameCol] ?? "").trim();
             const totalRaw = (r[totalCol] ?? "").toString().trim();
-
             if (!name) continue;
 
-            // total bisa kosong -> 0
             const total = Number(String(totalRaw).replace(/[^\d.-]/g, "")) || 0;
-
             parsed.push({ name, total });
           }
 
-          // Hilangkan duplikat nama (kalau sheet ada bagian 2, 3, dst)
-          // -> ambil total terbesar per nama (atau terakhir), kamu bisa ubah sesuai kebutuhan.
           const map = new Map();
           for (const item of parsed) {
             const key = item.name.toLowerCase();
             const prev = map.get(key);
             if (!prev) map.set(key, item);
-            else {
-              // pilih total yang lebih besar (lebih aman untuk "keterlambatan")
-              map.set(key, prev.total >= item.total ? prev : item);
-            }
+            else map.set(key, prev.total >= item.total ? prev : item);
           }
 
           employees = Array.from(map.values());
 
-          if (!employees.length)
+          if (!employees.length) {
             throw new Error("Data tidak ditemukan di kolom NAMA/TOTAL.");
+          }
 
           render();
         } catch (err) {
@@ -514,13 +488,12 @@ tbody tr:not(:first-child) .number {
           statusEl.innerHTML = `
             <span class="pill">
               <i class="ph ph-warning-circle"></i>
-              Gagal memuat data. Cek lagi link publish-to-web dan pastikan bisa diakses publik.
+              Gagal memuat data. Cek link publish-to-web dan pastikan bisa diakses publik.
             </span>
           `;
         }
       }
 
-      // Events
       btnTerlambat.addEventListener("click", () => setMode("terlambat"));
       btnRajin.addEventListener("click", () => setMode("rajin"));
 
@@ -528,27 +501,19 @@ tbody tr:not(:first-child) .number {
         const url = window.location.href;
         try {
           if (navigator.share) {
-            await navigator.share({
-              title: document.title,
-              url,
-            });
+            await navigator.share({ title: document.title, url });
           } else if (navigator.clipboard) {
             await navigator.clipboard.writeText(url);
             btnShare.innerHTML = `<i class="ph ph-check"></i>`;
-            setTimeout(
-              () =>
-                (btnShare.innerHTML = `<i class="ph ph-share-network"></i>`),
-              1200
-            );
+            setTimeout(() => {
+              btnShare.innerHTML = `<i class="ph ph-share-network"></i>`;
+            }, 1200);
           } else {
             prompt("Copy link:", url);
           }
-        } catch (e) {
-          // user cancel share -> abaikan
-        }
+        } catch (e) {}
       });
 
-      // Start
       loadData();
     </script>
   </body>
