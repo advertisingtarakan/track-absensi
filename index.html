@@ -274,7 +274,7 @@
       </div>
 
       <div class="hint">
-        <strong>Catatan:</strong> Ranking bisa berubah sesuai filternya.
+        <strong>Catatan:</strong> Data Ranking Berubah max 3 menit setelah perubahan data admin.
       </div>
 
       <div id="leaderboard">
@@ -415,12 +415,7 @@
           tbody.appendChild(tr);
         });
 
-        statusEl.innerHTML = `
-          <span class="pill">
-            <i class="ph ph-database"></i>
-            Data diambil otomatis dari Google Sheet (TOTAL)
-          </span>
-        `;
+
       }
 
       async function loadData() {
