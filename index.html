@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>Ranking Keterlambatan</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Rubik", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background: #fbfaff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+      }
+
+      main {
+        width: min(760px, 100%);
+        background: #ffffff;
+        box-shadow: 0px 5px 15px 8px #e4e7fb;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      /* Header */
+      #header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px 18px 12px 18px;
+      }
+
+      .titleWrap h1 {
+        font-size: 18px;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #141a39;
+      }
+
+      .titleWrap p {
+        margin-top: 6px;
+        font-size: 13px;
+        color: #4a4f6a;
+        line-height: 1.35;
+      }
+
+      .share {
+        flex: 0 0 auto;
+        width: 44px;
+        height: 36px;
+        background: #f55e77;
+        border: 0;
+        border-bottom: 3px solid #c0506a;
+        border-radius: 999px;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+      }
+
+      .share:active {
+        border-bottom: 0;
+        transform: translateY(2px);
+      }
+
+      .share i {
+        color: #fff;
+        font-size: 20px;
+      }
+
+      /* Filter */
+      #filters {
+        display: flex;
+        gap: 10px;
+        padding: 0 18px 14px 18px;
+        flex-wrap: wrap;
+      }
+
+      .filterBtn {
+        border: 1px solid #d7daf6;
+        background: #fff;
+        color: #141a39;
+        padding: 10px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .filterBtn i {
+        font-size: 18px;
+      }
+
+      .filterBtn.active {
+        background: #5c5be5;
+        border-color: #5c5be5;
+        color: #fff;
+      }
+
+      .hint {
+        padding: 0 18px 14px 18px;
+        font-size: 12.5px;
+        color: #5a5f7a;
+      }
+
+      /* Leaderboard */
+      #leaderboard {
+        position: relative;
+        padding-bottom: 12px;
+      }
+
+      .ribbon {
+        height: 54px;
+        background: #5c5be5;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        box-shadow: 0px 15px 11px -6px #7a7a7d;
+      }
+
+      .ribbon::before,
+      .ribbon::after {
+        content: "";
+        height: 14px;
+        width: 14px;
+        bottom: -7px;
+        position: absolute;
+        transform: rotate(45deg);
+        background: #5c5be5;
+        z-index: -1;
+      }
+
+      .ribbon::before {
+        left: 14px;
+      }
+      .ribbon::after {
+        right: 14px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        color: #141a39;
+        position: relative;
+        z-index: 1;
+      }
+
+      tbody tr {
+        transition: all 0.18s ease-in-out;
+      }
+
+      tbody tr:nth-child(odd) {
+        background: #f9f9f9;
+      }
+
+      tbody tr:hover {
+        background: #fff;
+        transform: scale(1.01);
+        box-shadow: 0px 5px 15px 8px #e4e7fb;
+      }
+
+      td {
+        padding: 14px 18px;
+        font-size: 14px;
+        vertical-align: middle;
+      }
+
+      .number {
+        width: 56px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      /* baris #1 kasih warna teks putih karena di atas ribbon */
+      tbody tr:first-child td {
+        color: #fff;
+      }
+
+      .name {
+        text-align: left;
+        font-weight: 500;
+        word-break: break-word;
+      }
+
+      .points {
+        text-align: right;
+        font-weight: 700;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .medal {
+        width: 28px;
+        height: 28px;
+        display: inline-grid;
+        place-items: center;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.22);
+        border: 1px solid rgba(255, 255, 255, 0.32);
+        font-size: 16px;
+      }
+
+      /* Status */
+      #status {
+        padding: 14px 18px 18px 18px;
+        color: #4a4f6a;
+        font-size: 13px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid #d7daf6;
+        background: #fbfaff;
+        padding: 8px 12px;
+        border-radius: 999px;
+      }
+
+      .pill i {
+        font-size: 18px;
+      }
+
+      /* Mobile tweaks */
+      @media (max-width: 520px) {
+        td {
+          padding: 12px 12px;
+          font-size: 13px;
+        }
+        .number {
+          width: 44px;
+          font-size: 16px;
+        }
+        #header {
+          padding: 16px 14px 10px 14px;
+        }
+        #filters,
+        .hint {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+        #status {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div id="header">
+        <div class="titleWrap">
+          <h1>Ranking</h1>
+          <p id="subtitle">Ranking Paling Terlambat</p>
+        </div>
+
+        <button class="share" id="btnShare" aria-label="Share">
+          <i class="ph ph-share-network"></i>
+        </button>
+      </div>
+
+      <div id="filters">
+        <button class="filterBtn active" id="btnTerlambat" type="button">
+          <i class="ph ph-sort-descending"></i>
+          Ranking Paling Terlambat
+        </button>
+        <button class="filterBtn" id="btnRajin" type="button">
+          <i class="ph ph-sort-ascending"></i>
+          Ranking Paling Rajin
+        </button>
+      </div>
+
+      <div class="hint">
+        <strong>Catatan:</strong> Ranking bisa berubah sesuai filternya.
+      </div>
+
+      <div id="leaderboard">
+        <div class="ribbon"></div>
+
+        <table aria-label="Leaderboard">
+          <tbody id="tbody">
+            <!-- diisi JS -->
+          </tbody>
+        </table>
+
+        <div id="status"></div>
+      </div>
+    </main>
+
+    <script>
+      // Link pubhtml dari kamu
+      const PUBHTML_URL =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2MhRX_p6g3KFPP2W4XJn6g98RbhDdjIPFztK71HafHiZ9WGCLoGZ7pm_X2lPTA-yIizfIxgA2mEVA/pubhtml";
+
+      // Konversi pubhtml -> CSV (lebih mudah di-parse dan biasanya CORS lebih aman)
+      function pubhtmlToCsv(url) {
+        // contoh: .../pubhtml  -> .../pub?output=csv
+        return url.replace(/\/pubhtml(\?.*)?$/, "/pub?output=csv");
+      }
+
+      // CSV parser sederhana (support quoted values)
+      function parseCSV(text) {
+        const rows = [];
+        let row = [];
+        let cur = "";
+        let inQuotes = false;
+
+        for (let i = 0; i < text.length; i++) {
+          const ch = text[i];
+          const next = text[i + 1];
+
+          if (ch === '"' && inQuotes && next === '"') {
+            cur += '"';
+            i++;
+            continue;
+          }
+
+          if (ch === '"') {
+            inQuotes = !inQuotes;
+            continue;
+          }
+
+          if (!inQuotes && ch === ",") {
+            row.push(cur);
+            cur = "";
+            continue;
+          }
+
+          if (!inQuotes && ch === "\n") {
+            row.push(cur);
+            rows.push(row);
+            row = [];
+            cur = "";
+            continue;
+          }
+
+          if (ch !== "\r") cur += ch;
+        }
+
+        // last cell
+        if (cur.length > 0 || row.length > 0) {
+          row.push(cur);
+          rows.push(row);
+        }
+
+        return rows;
+      }
+
+      function normalize(s) {
+        return (s ?? "").toString().trim().toLowerCase();
+      }
+
+      function medalForRank(rank) {
+        if (rank === 1) return "🥇";
+        if (rank === 2) return "🥈";
+        if (rank === 3) return "🥉";
+        return null;
+      }
+
+      // State
+      let employees = []; // { name, total }
+      let mode = "terlambat"; // terlambat | rajin
+
+      const tbody = document.getElementById("tbody");
+      const statusEl = document.getElementById("status");
+      const subtitle = document.getElementById("subtitle");
+
+      const btnTerlambat = document.getElementById("btnTerlambat");
+      const btnRajin = document.getElementById("btnRajin");
+      const btnShare = document.getElementById("btnShare");
+
+      function setMode(newMode) {
+        mode = newMode;
+
+        btnTerlambat.classList.toggle("active", mode === "terlambat");
+        btnRajin.classList.toggle("active", mode === "rajin");
+
+        subtitle.textContent =
+          mode === "terlambat"
+            ? "Ranking Paling Terlambat"
+            : "Ranking Paling Rajin";
+
+        render();
+      }
+
+      function render() {
+        tbody.innerHTML = "";
+
+        const sorted = [...employees].sort((a, b) => {
+          if (mode === "terlambat") return b.total - a.total; // terbesar dulu
+          return a.total - b.total; // terkecil dulu
+        });
+
+        sorted.forEach((emp, idx) => {
+          const rank = idx + 1;
+          const medal = medalForRank(rank);
+
+          const tr = document.createElement("tr");
+
+          const tdNum = document.createElement("td");
+          tdNum.className = "number";
+          tdNum.textContent = rank;
+
+          const tdName = document.createElement("td");
+          tdName.className = "name";
+          tdName.textContent = emp.name;
+
+          const tdPts = document.createElement("td");
+          tdPts.className = "points";
+          tdPts.innerHTML = `
+            <span>${emp.total}</span>
+            ${
+              medal
+                ? `<span class="medal" title="Top ${rank}">${medal}</span>`
+                : ""
+            }
+          `;
+
+          tr.appendChild(tdNum);
+          tr.appendChild(tdName);
+          tr.appendChild(tdPts);
+
+          tbody.appendChild(tr);
+        });
+
+        statusEl.innerHTML = `
+          <span class="pill">
+            <i class="ph ph-database"></i>
+            Data diambil otomatis dari Google Sheet (TOTAL)
+          </span>
+        `;
+      }
+
+      async function loadData() {
+        try {
+          statusEl.innerHTML = `<span class="pill"><i class="ph ph-circle-notch"></i> Memuat data...</span>`;
+
+          const csvUrl = pubhtmlToCsv(PUBHTML_URL);
+          const res = await fetch(csvUrl, { cache: "no-store" });
+          if (!res.ok) throw new Error("Gagal fetch CSV: " + res.status);
+
+          const text = await res.text();
+          const rows = parseCSV(text);
+
+          if (!rows.length) throw new Error("CSV kosong");
+
+          // Cari header row yang punya "NAMA" dan "TOTAL"
+          // (kadang Google Sheet ada baris kosong / judul)
+          let headerIndex = -1;
+          let nameCol = -1;
+          let totalCol = -1;
+
+          for (let i = 0; i < Math.min(rows.length, 30); i++) {
+            const r = rows[i].map(normalize);
+            const nIdx = r.findIndex((x) => x === "nama");
+            const tIdx = r.findIndex((x) => x === "total");
+            if (nIdx !== -1 && tIdx !== -1) {
+              headerIndex = i;
+              nameCol = nIdx;
+              totalCol = tIdx;
+              break;
+            }
+          }
+
+          if (headerIndex === -1)
+            throw new Error(
+              "Header tidak ditemukan. Pastikan ada kolom NAMA dan TOTAL."
+            );
+
+          // Ambil data setelah header
+          const dataRows = rows.slice(headerIndex + 1);
+
+          const parsed = [];
+          for (const r of dataRows) {
+            const name = (r[nameCol] ?? "").trim();
+            const totalRaw = (r[totalCol] ?? "").toString().trim();
+
+            if (!name) continue;
+
+            // total bisa kosong -> 0
+            const total = Number(String(totalRaw).replace(/[^\d.-]/g, "")) || 0;
+
+            parsed.push({ name, total });
+          }
+
+          // Hilangkan duplikat nama (kalau sheet ada bagian 2, 3, dst)
+          // -> ambil total terbesar per nama (atau terakhir), kamu bisa ubah sesuai kebutuhan.
+          const map = new Map();
+          for (const item of parsed) {
+            const key = item.name.toLowerCase();
+            const prev = map.get(key);
+            if (!prev) map.set(key, item);
+            else {
+              // pilih total yang lebih besar (lebih aman untuk "keterlambatan")
+              map.set(key, prev.total >= item.total ? prev : item);
+            }
+          }
+
+          employees = Array.from(map.values());
+
+          if (!employees.length)
+            throw new Error("Data tidak ditemukan di kolom NAMA/TOTAL.");
+
+          render();
+        } catch (err) {
+          console.error(err);
+          statusEl.innerHTML = `
+            <span class="pill">
+              <i class="ph ph-warning-circle"></i>
+              Gagal memuat data. Cek lagi link publish-to-web dan pastikan bisa diakses publik.
+            </span>
+          `;
+        }
+      }
+
+      // Events
+      btnTerlambat.addEventListener("click", () => setMode("terlambat"));
+      btnRajin.addEventListener("click", () => setMode("rajin"));
+
+      btnShare.addEventListener("click", async () => {
+        const url = window.location.href;
+        try {
+          if (navigator.share) {
+            await navigator.share({
+              title: document.title,
+              url,
+            });
+          } else if (navigator.clipboard) {
+            await navigator.clipboard.writeText(url);
+            btnShare.innerHTML = `<i class="ph ph-check"></i>`;
+            setTimeout(
+              () =>
+                (btnShare.innerHTML = `<i class="ph ph-share-network"></i>`),
+              1200
+            );
+          } else {
+            prompt("Copy link:", url);
+          }
+        } catch (e) {
+          // user cancel share -> abaikan
+        }
+      });
+
+      // Start
+      loadData();
+    </script>
+  </body>
+</html>
