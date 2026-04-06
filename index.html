@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <title>Ranking Keterlambatan</title>
+    <title>Ranking & Recap</title>
 
     <style>
       * {
@@ -24,12 +24,13 @@
         --bg: #fbfaff;
         --card: #ffffff;
         --text: #141a39;
-        --muted: #5a5f7a;
+        --muted: #4a4f6a;
+        --line: #d7daf6;
         --primary: #5c5be5;
-        --primary-soft: #efefff;
-        --border: #d7daf6;
-        --danger: #f55e77;
-        --danger-dark: #c0506a;
+        --primary-dark: #4b49cb;
+        --soft: #f3f2ff;
+        --pink: #f55e77;
+        --pink-dark: #c0506a;
       }
 
       body {
@@ -42,10 +43,10 @@
       }
 
       main {
-        width: min(860px, 100%);
+        width: min(980px, 100%);
         background: var(--card);
-        box-shadow: 0px 5px 15px 8px #e4e7fb;
-        border-radius: 14px;
+        box-shadow: 0 5px 15px 8px #e4e7fb;
+        border-radius: 18px;
         overflow: hidden;
       }
 
@@ -54,7 +55,7 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        padding: 18px 18px 10px 18px;
+        padding: 20px 20px 10px 20px;
       }
 
       .titleWrap h1 {
@@ -67,7 +68,7 @@
       .titleWrap p {
         margin-top: 6px;
         font-size: 13px;
-        color: #4a4f6a;
+        color: var(--muted);
         line-height: 1.35;
       }
 
@@ -75,9 +76,9 @@
         flex: 0 0 auto;
         width: 44px;
         height: 36px;
-        background: var(--danger);
+        background: var(--pink);
         border: 0;
-        border-bottom: 3px solid var(--danger-dark);
+        border-bottom: 3px solid var(--pink-dark);
         border-radius: 999px;
         cursor: pointer;
         display: grid;
@@ -94,24 +95,27 @@
         font-size: 20px;
       }
 
-      .controls {
-        padding: 0 18px 10px 18px;
-        display: grid;
-        gap: 10px;
+      .section {
+        padding: 0 20px 12px 20px;
       }
 
-      .controlRow {
+      .toolbar,
+      .modeRow {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
       }
 
-      .filterBtn,
-      .monthControl {
-        border: 1px solid var(--border);
+      .modeRow {
+        margin-top: 10px;
+        align-items: stretch;
+      }
+
+      .btn {
+        border: 1px solid var(--line);
         background: #fff;
         color: var(--text);
-        padding: 10px 12px;
+        padding: 10px 14px;
         border-radius: 999px;
         cursor: pointer;
         font-size: 13px;
@@ -120,75 +124,93 @@
         gap: 8px;
       }
 
-      .filterBtn i {
+      .btn i {
         font-size: 18px;
       }
 
-      .filterBtn.active {
+      .btn.active {
         background: var(--primary);
         border-color: var(--primary);
         color: #fff;
       }
 
-      .monthControl {
-        padding-right: 8px;
-        cursor: default;
+      .selectWrap {
+        position: relative;
+        min-width: 230px;
+        flex: 1 1 260px;
       }
 
-      .monthControl label {
-        font-weight: 600;
-        color: var(--muted);
-      }
-
-      .monthControl select {
-        border: 0;
-        outline: 0;
-        background: transparent;
-        color: var(--text);
-        font-size: 13px;
-        min-width: 145px;
-        cursor: pointer;
-      }
-
-      .monthControl.hidden {
+      .selectWrap.hidden {
         display: none;
       }
 
-      .summary {
-        padding: 0 18px 14px 18px;
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .summaryCard {
-        border: 1px solid var(--border);
-        background: var(--primary-soft);
+      .selectIcon,
+      .selectArrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
         color: var(--text);
-        border-radius: 12px;
-        padding: 10px 12px;
-        min-width: 145px;
       }
 
-      .summaryCard small {
-        display: block;
-        color: var(--muted);
-        margin-bottom: 4px;
-        font-size: 12px;
+      .selectIcon {
+        left: 14px;
+        font-size: 18px;
       }
 
-      .summaryCard strong {
-        font-size: 16px;
+      .selectArrow {
+        right: 14px;
+        font-size: 18px;
+      }
+
+      select {
+        width: 100%;
+        height: 100%;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--text);
+        padding: 10px 42px 10px 40px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 13px;
+        outline: none;
+        appearance: none;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .statCard {
+        border: 1px solid #c8ccf9;
+        background: #f4f4ff;
+        border-radius: 14px;
+        padding: 12px 14px;
+      }
+
+      .statCard .label {
+        font-size: 12.5px;
+        color: #586081;
+      }
+
+      .statCard .value {
+        margin-top: 6px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
       }
 
       .hint {
-        padding: 0 18px 14px 18px;
+        padding: 4px 20px 14px 20px;
         font-size: 12.5px;
-        color: var(--muted);
+        color: #5a5f7a;
       }
 
       #leaderboard {
-        padding: 0 0 12px 0;
+        padding: 0 0 16px 0;
       }
 
       table {
@@ -202,12 +224,12 @@
         transition: background 0.15s ease;
       }
 
-      tbody tr:not(.tableHead):nth-child(even) {
+      tbody tr:nth-child(odd):not(:first-child) {
         background: #f9f9f9;
       }
 
-      tbody tr:not(.tableHead):hover {
-        background: #ffffff;
+      tbody tr:hover:not(:first-child) {
+        background: #fff;
       }
 
       td {
@@ -216,28 +238,8 @@
         vertical-align: middle;
       }
 
-      .tableHead {
-        background: var(--primary);
-      }
-
-      .tableHead td {
-        color: #fff;
-        font-size: 13px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-      }
-
-      .tableHead td:first-child {
-        border-top-left-radius: 14px;
-      }
-
-      .tableHead td:last-child {
-        border-top-right-radius: 14px;
-      }
-
       .number {
-        width: 76px;
+        width: 72px;
         font-size: 18px;
         font-weight: 700;
         text-align: left;
@@ -251,8 +253,12 @@
       }
 
       .points {
+        width: 180px;
         text-align: right;
         font-weight: 700;
+      }
+
+      .pointsWrap {
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -265,14 +271,31 @@
         display: inline-grid;
         place-items: center;
         border-radius: 999px;
-        background: rgba(92, 91, 229, 0.12);
-        border: 1px solid rgba(92, 91, 229, 0.18);
+        background: rgba(255, 255, 255, 0.22);
+        border: 1px solid rgba(255, 255, 255, 0.32);
         font-size: 16px;
       }
 
-      .statusWrap {
-        padding: 14px 18px 10px 18px;
-        color: #4a4f6a;
+      tbody tr:first-child {
+        background: var(--primary);
+      }
+
+      tbody tr:first-child td,
+      tbody tr:first-child .number {
+        color: #fff;
+      }
+
+      tbody tr:first-child td:first-child {
+        border-top-left-radius: 14px;
+      }
+
+      tbody tr:first-child td:last-child {
+        border-top-right-radius: 14px;
+      }
+
+      #status {
+        padding: 14px 20px 0 20px;
+        color: var(--muted);
         font-size: 13px;
       }
 
@@ -280,7 +303,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        border: 1px solid var(--border);
+        border: 1px solid var(--line);
         background: var(--bg);
         padding: 8px 12px;
         border-radius: 999px;
@@ -290,47 +313,58 @@
         font-size: 18px;
       }
 
-      @media (max-width: 640px) {
-        td {
-          padding: 12px 12px;
-          font-size: 13px;
-        }
+      .mutedText {
+        color: var(--muted);
+      }
 
-        .number {
-          width: 60px;
-          font-size: 16px;
+      .spin {
+        display: inline-block;
+        animation: spin 0.9s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 760px) {
+        .stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 560px) {
+        main {
+          border-radius: 14px;
         }
 
         #header {
           padding: 16px 14px 10px 14px;
         }
 
-        .controls,
-        .summary,
+        .section,
         .hint,
-        .statusWrap {
+        #status {
           padding-left: 14px;
           padding-right: 14px;
         }
 
-        .summaryCard {
-          min-width: calc(50% - 4px);
-        }
-      }
-
-      @media (max-width: 480px) {
-        .summaryCard {
-          min-width: 100%;
+        td {
+          padding: 12px;
+          font-size: 13px;
         }
 
-        .monthControl {
-          width: 100%;
-          justify-content: space-between;
+        .number {
+          width: 52px;
+          font-size: 16px;
         }
 
-        .monthControl select {
-          min-width: 110px;
-          max-width: 100%;
+        .points {
+          width: 110px;
         }
       }
     </style>
@@ -349,35 +383,56 @@
         </button>
       </div>
 
-      <div class="controls">
-        <div class="controlRow" id="viewControls">
-          <button class="filterBtn active" id="btnViewRanking" type="button">
+      <div class="section">
+        <div class="toolbar">
+          <button class="btn active" id="btnViewRanking" type="button">
             <i class="ph ph-trophy"></i>
             Ranking
           </button>
-          <button class="filterBtn" id="btnViewRecap" type="button">
+          <button class="btn" id="btnViewRecap" type="button">
             <i class="ph ph-chart-bar"></i>
             Recap
           </button>
         </div>
 
-        <div class="controlRow" id="sortControls">
-          <button class="filterBtn active" id="btnTerlambat" type="button">
+        <div class="modeRow">
+          <button class="btn active" id="btnTerlambat" type="button">
             <i class="ph ph-sort-descending"></i>
             Ranking Paling Terlambat
           </button>
-          <button class="filterBtn" id="btnRajin" type="button">
+          <button class="btn" id="btnRajin" type="button">
             <i class="ph ph-sort-ascending"></i>
             Ranking Paling Rajin
           </button>
-          <div class="monthControl hidden" id="monthControl">
-            <label for="monthSelect">Filter Bulan</label>
-            <select id="monthSelect"></select>
+
+          <div class="selectWrap hidden" id="monthWrap">
+            <i class="ph ph-calendar selectIcon"></i>
+            <select id="monthSelect" aria-label="Filter Bulan">
+              <option value="total">1 Tahun</option>
+            </select>
+            <i class="ph ph-caret-down selectArrow"></i>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="statCard">
+            <div class="label">Tampilan</div>
+            <div class="value" id="statView">Ranking</div>
+          </div>
+          <div class="statCard">
+            <div class="label">Filter</div>
+            <div class="value" id="statFilter">Total</div>
+          </div>
+          <div class="statCard">
+            <div class="label">Total User</div>
+            <div class="value" id="statUsers">0</div>
+          </div>
+          <div class="statCard">
+            <div class="label">Total Nilai</div>
+            <div class="value" id="statTotal">0</div>
           </div>
         </div>
       </div>
-
-      <div class="summary" id="summary"></div>
 
       <div class="hint" id="hintText">
         <strong>Catatan:</strong> Data ranking berubah maksimal 3 menit setelah perubahan data admin.
@@ -387,30 +442,43 @@
         <table aria-label="Leaderboard">
           <tbody id="tbody"></tbody>
         </table>
-        <div class="statusWrap" id="status"></div>
+        <div id="status"></div>
       </div>
     </main>
 
     <script>
-      const RANKING_SHEET_URL =
+      const RANKING_PUBHTML_URL =
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2MhRX_p6g3KFPP2W4XJn6g98RbhDdjIPFztK71HafHiZ9WGCLoGZ7pm_X2lPTA-yIizfIxgA2mEVA/pubhtml";
 
-      const RECAP_SHEET_URL =
+      const RECAP_PUBHTML_URL =
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2MhRX_p6g3KFPP2W4XJn6g98RbhDdjIPFztK71HafHiZ9WGCLoGZ7pm_X2lPTA-yIizfIxgA2mEVA/pubhtml?gid=949865330&single=true";
+      const RECAP_CSV_URL =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2MhRX_p6g3KFPP2W4XJn6g98RbhDdjIPFztK71HafHiZ9WGCLoGZ7pm_X2lPTA-yIizfIxgA2mEVA/pub?gid=949865330&output=csv";
+      const RECAP_TSV_URL =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2MhRX_p6g3KFPP2W4XJn6g98RbhDdjIPFztK71HafHiZ9WGCLoGZ7pm_X2lPTA-yIizfIxgA2mEVA/pub?gid=949865330&output=tsv";
+      const RECAP_CSV_URL_ALT =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2MhRX_p6g3KFPP2W4XJn6g98RbhDdjIPFztK71HafHiZ9WGCLoGZ7pm_X2lPTA-yIizfIxgA2mEVA/pub?gid=949865330&single=true&output=csv";
+      const RECAP_TSV_URL_ALT =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2MhRX_p6g3KFPP2W4XJn6g98RbhDdjIPFztK71HafHiZ9WGCLoGZ7pm_X2lPTA-yIizfIxgA2mEVA/pub?gid=949865330&single=true&output=tsv";
 
-      const MONTH_DICTIONARY = [
-        { aliases: ["januari", "jan"], key: "januari", label: "Januari" },
-        { aliases: ["februari", "feb"], key: "februari", label: "Februari" },
-        { aliases: ["maret", "mar"], key: "maret", label: "Maret" },
-        { aliases: ["april", "apr"], key: "april", label: "April" },
-        { aliases: ["mei", "may"], key: "mei", label: "Mei" },
-        { aliases: ["juni", "jun"], key: "juni", label: "Juni" },
-        { aliases: ["juli", "jul"], key: "juli", label: "Juli" },
-        { aliases: ["agustus", "agu", "agt", "aug"], key: "agustus", label: "Agustus" },
-        { aliases: ["september", "sep", "sept"], key: "september", label: "September" },
-        { aliases: ["oktober", "okt", "oct"], key: "oktober", label: "Oktober" },
-        { aliases: ["november", "nov"], key: "november", label: "November" },
-        { aliases: ["desember", "des", "dec"], key: "desember", label: "Desember" },
+      const RECAP_EDIT_URL =
+        "https://docs.google.com/spreadsheets/d/1AdX5f32ruU_hGMxELgn4iQK-Y8AI-jnXBi443_bNE4Q/edit?gid=949865330#gid=949865330";
+      const RECAP_DIRECT_TSV_URL =
+        "https://doc-00-90-sheets.googleusercontent.com/pub/54bogvaave6cua4cdnls17ksc4/hcpd18csd0cgo1rq14k9f1hf84/1775447900000/114373693213533810548/*/e@2PACX-1vT2MhRX_p6g3KFPP2W4XJn6g98RbhDdjIPFztK71HafHiZ9WGCLoGZ7pm_X2lPTA-yIizfIxgA2mEVA?gid=949865330&output=tsv";
+
+      const MONTHS = [
+        { key: "januari", label: "Januari", aliases: ["januari", "jan"] },
+        { key: "februari", label: "Februari", aliases: ["februari", "feb"] },
+        { key: "maret", label: "Maret", aliases: ["maret", "mar"] },
+        { key: "april", label: "April", aliases: ["april", "apr"] },
+        { key: "mei", label: "Mei", aliases: ["mei", "may"] },
+        { key: "juni", label: "Juni", aliases: ["juni", "jun"] },
+        { key: "juli", label: "Juli", aliases: ["juli", "jul"] },
+        { key: "agustus", label: "Agustus", aliases: ["agustus", "agu", "agt", "aug"] },
+        { key: "september", label: "September", aliases: ["september", "sep", "sept"] },
+        { key: "oktober", label: "Oktober", aliases: ["oktober", "okt", "oct"] },
+        { key: "november", label: "November", aliases: ["november", "nov"] },
+        { key: "desember", label: "Desember", aliases: ["desember", "des", "dec"] },
       ];
 
       const state = {
@@ -420,84 +488,42 @@
         rankingRows: [],
         recapRows: [],
         recapMonths: [],
+        rankingLoaded: false,
+        recapLoaded: false,
+        rankingError: "",
+        recapError: "",
+        rankingLoading: false,
+        recapLoading: false,
+        rankingSourceLabel: "sheet ranking",
+        recapSourceLabel: "sheet recap",
         loadedAt: null,
       };
 
       const tbody = document.getElementById("tbody");
       const statusEl = document.getElementById("status");
-      const subtitle = document.getElementById("subtitle");
-      const summaryEl = document.getElementById("summary");
-      const hintText = document.getElementById("hintText");
-      const monthSelect = document.getElementById("monthSelect");
-      const monthControl = document.getElementById("monthControl");
       const pageTitle = document.getElementById("pageTitle");
+      const subtitle = document.getElementById("subtitle");
+      const hintText = document.getElementById("hintText");
 
       const btnViewRanking = document.getElementById("btnViewRanking");
       const btnViewRecap = document.getElementById("btnViewRecap");
       const btnTerlambat = document.getElementById("btnTerlambat");
       const btnRajin = document.getElementById("btnRajin");
       const btnShare = document.getElementById("btnShare");
+      const monthWrap = document.getElementById("monthWrap");
+      const monthSelect = document.getElementById("monthSelect");
 
-      function pubhtmlToCsv(url) {
-        const parsed = new URL(url);
-        parsed.pathname = parsed.pathname.replace(/\/pubhtml$/, "/pub");
-        parsed.searchParams.set("output", "csv");
-        parsed.searchParams.delete("single");
-        return parsed.toString();
-      }
-
-      function parseCSV(text) {
-        const rows = [];
-        let row = [];
-        let cur = "";
-        let inQuotes = false;
-
-        for (let i = 0; i < text.length; i++) {
-          const ch = text[i];
-          const next = text[i + 1];
-
-          if (ch === '"' && inQuotes && next === '"') {
-            cur += '"';
-            i++;
-            continue;
-          }
-
-          if (ch === '"') {
-            inQuotes = !inQuotes;
-            continue;
-          }
-
-          if (!inQuotes && ch === ",") {
-            row.push(cur);
-            cur = "";
-            continue;
-          }
-
-          if (!inQuotes && ch === "\n") {
-            row.push(cur);
-            rows.push(row);
-            row = [];
-            cur = "";
-            continue;
-          }
-
-          if (ch !== "\r") cur += ch;
-        }
-
-        if (cur.length > 0 || row.length > 0) {
-          row.push(cur);
-          rows.push(row);
-        }
-
-        return rows;
-      }
+      const statView = document.getElementById("statView");
+      const statFilter = document.getElementById("statFilter");
+      const statUsers = document.getElementById("statUsers");
+      const statTotal = document.getElementById("statTotal");
 
       function normalize(value) {
-        return (value ?? "")
-          .toString()
-          .trim()
-          .toLowerCase()
-          .replace(/\s+/g, " ");
+        return (value ?? "").toString().trim().toLowerCase();
+      }
+
+      function cleanCell(value) {
+        return (value ?? "").toString().replace(/\u00a0/g, " ").trim();
       }
 
       function parseNumber(value) {
@@ -511,6 +537,10 @@
         return Number.isFinite(number) ? number : 0;
       }
 
+      function formatNumber(value) {
+        return new Intl.NumberFormat("id-ID").format(Number(value || 0));
+      }
+
       function medalForRank(rank) {
         if (rank === 1) return "🥇";
         if (rank === 2) return "🥈";
@@ -518,48 +548,331 @@
         return null;
       }
 
-      function formatNumber(value) {
-        return new Intl.NumberFormat("id-ID").format(Number(value || 0));
+      function pubhtmlToCsv(url, options = {}) {
+        try {
+          const parsed = new URL(url, window.location.href);
+          parsed.pathname = parsed.pathname.replace(/\/pubhtml$/i, "/pub");
+          parsed.searchParams.set("output", options.output || "csv");
+          if (options.dropSingle) parsed.searchParams.delete("single");
+          return parsed.toString();
+        } catch (error) {
+          return url.replace(/\/pubhtml(\?.*)?$/i, "/pub?output=csv");
+        }
       }
 
-      function getMonthMeta(rawHeader) {
-        const normalized = normalize(rawHeader);
-        return MONTH_DICTIONARY.find((month) =>
-          month.aliases.some((alias) => normalized === alias)
-        );
+      function parseDelimited(text, delimiter = ",") {
+        const rows = [];
+        let row = [];
+        let current = "";
+        let inQuotes = false;
+
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i];
+          const next = text[i + 1];
+
+          if (delimiter === "," && char === '"' && inQuotes && next === '"') {
+            current += '"';
+            i += 1;
+            continue;
+          }
+
+          if (delimiter === "," && char === '"') {
+            inQuotes = !inQuotes;
+            continue;
+          }
+
+          if (!inQuotes && char === delimiter) {
+            row.push(current);
+            current = "";
+            continue;
+          }
+
+          if (!inQuotes && char === "\n") {
+            row.push(current);
+            rows.push(row);
+            row = [];
+            current = "";
+            continue;
+          }
+
+          if (char !== "\r") current += char;
+        }
+
+        if (current.length > 0 || row.length > 0) {
+          row.push(current);
+          rows.push(row);
+        }
+
+        return rows.map((item) => item.map(cleanCell));
       }
 
-      function findColumns(rows, required = ["nama"]) {
-        for (let i = 0; i < Math.min(rows.length, 40); i++) {
-          const current = rows[i].map(normalize);
-          const columns = {};
+      function parseHtmlTable(text) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, "text/html");
+        const rows = [];
 
-          required.forEach((key) => {
-            columns[key] = current.findIndex((value) => value === key);
+        doc.querySelectorAll("table").forEach((table) => {
+          table.querySelectorAll("tr").forEach((tr) => {
+            const cells = Array.from(tr.querySelectorAll("th, td")).map((cell) =>
+              cleanCell(cell.textContent)
+            );
+            if (cells.some((cell) => cell !== "")) rows.push(cells);
           });
+        });
 
-          const allFound = Object.values(columns).every((idx) => idx !== -1);
-          if (allFound) {
-            return { headerIndex: i, header: rows[i], columns };
+        return rows;
+      }
+
+      function parseSheetText(text) {
+        const trimmed = String(text || "").trim();
+        if (!trimmed) return [];
+
+        if (/<html|<!doctype html|<table/i.test(trimmed)) {
+          return parseHtmlTable(trimmed);
+        }
+
+        const sample = trimmed.split("\n").slice(0, 5).join("\n");
+        const commaCount = (sample.match(/,/g) || []).length;
+        const tabCount = (sample.match(/\t/g) || []).length;
+        return parseDelimited(trimmed, tabCount > commaCount ? "\t" : ",");
+      }
+
+      function getSheetCandidates(url, options = {}) {
+        const candidates = [];
+        const push = (target, label) => {
+          if (!target) return;
+          if (candidates.some((item) => item.url === target)) return;
+          candidates.push({ url: target, label });
+        };
+
+        push(url, options.baseLabel || "Sheet");
+
+        try {
+          const parsed = new URL(url, window.location.href);
+          const gid = parsed.searchParams.get("gid") || options.gid || "";
+          const isPublished = /\/spreadsheets\/d\/e\//i.test(parsed.pathname);
+          const idMatch = parsed.pathname.match(/\/spreadsheets\/d\/([^/]+)/i);
+          const sheetId = idMatch ? idMatch[1] : "";
+
+          if (/\/pubhtml$/i.test(parsed.pathname)) {
+            push(pubhtmlToCsv(parsed.toString(), { output: "csv" }), `${options.baseLabel || "Sheet"} CSV`);
+            push(pubhtmlToCsv(parsed.toString(), { output: "csv", dropSingle: true }), `${options.baseLabel || "Sheet"} CSV alt`);
+            push(pubhtmlToCsv(parsed.toString(), { output: "tsv" }), `${options.baseLabel || "Sheet"} TSV`);
+            push(pubhtmlToCsv(parsed.toString(), { output: "tsv", dropSingle: true }), `${options.baseLabel || "Sheet"} TSV alt`);
+          }
+
+          if (!isPublished && sheetId) {
+            const exportBase = `https://docs.google.com/spreadsheets/d/${sheetId}/export`;
+            if (gid) {
+              push(`${exportBase}?format=csv&gid=${encodeURIComponent(gid)}`, `${options.baseLabel || "Sheet"} export CSV`);
+              push(`${exportBase}?format=tsv&gid=${encodeURIComponent(gid)}`, `${options.baseLabel || "Sheet"} export TSV`);
+              push(`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${encodeURIComponent(gid)}`, `${options.baseLabel || "Sheet"} gviz CSV`);
+            }
+          }
+        } catch (error) {
+          console.error(error);
+        }
+
+        return candidates;
+      }
+
+      async function fetchSheetRows(urls, options = {}) {
+        const list = Array.isArray(urls) ? urls : [urls];
+        const candidates = [];
+        list.forEach((item) => {
+          getSheetCandidates(item, options).forEach((candidate) => {
+            if (!candidates.some((existing) => existing.url === candidate.url)) {
+              candidates.push(candidate);
+            }
+          });
+        });
+
+        let lastError = null;
+
+        for (const candidate of candidates) {
+          try {
+            const response = await fetch(candidate.url, { cache: "no-store" });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const text = await response.text();
+            const rows = parseSheetText(text).filter((row) => row.some((cell) => cleanCell(cell) !== ""));
+            if (rows.length) {
+              return {
+                rows,
+                sourceLabel: candidate.label,
+                sourceUrl: candidate.url,
+              };
+            }
+            lastError = new Error(`Sheet kosong dari ${candidate.label}`);
+          } catch (error) {
+            lastError = error;
           }
         }
 
+        throw lastError || new Error("Gagal membaca sheet.");
+      }
+
+      async function fetchSheetRowsValidated(urls, options = {}) {
+        const list = Array.isArray(urls) ? urls : [urls];
+        const candidates = [];
+        list.forEach((item) => {
+          getSheetCandidates(item, options).forEach((candidate) => {
+            if (!candidates.some((existing) => existing.url === candidate.url)) {
+              candidates.push(candidate);
+            }
+          });
+        });
+
+        let lastError = null;
+        let foundWrongSheet = false;
+
+        for (const candidate of candidates) {
+          try {
+            const response = await fetch(candidate.url, { cache: "no-store" });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            const text = await response.text();
+            const rows = parseSheetText(text).filter((row) => row.some((cell) => cleanCell(cell) !== ""));
+            if (!rows.length) {
+              lastError = new Error(`Sheet kosong dari ${candidate.label}`);
+              continue;
+            }
+
+            const recapInfo = findRecapColumns(rows);
+            if (recapInfo) {
+              return {
+                rows,
+                info: recapInfo,
+                sourceLabel: candidate.label,
+                sourceUrl: candidate.url,
+              };
+            }
+
+            if (findRankingColumns(rows)) {
+              foundWrongSheet = true;
+              lastError = new Error(`URL ${candidate.label} masih mengarah ke sheet ranking/default`);
+              continue;
+            }
+
+            lastError = new Error(`Header recap tidak ditemukan pada ${candidate.label}`);
+          } catch (error) {
+            lastError = error;
+          }
+        }
+
+        if (foundWrongSheet) {
+          throw new Error("Link recap yang pertama masih masuk ke sheet default. Saya lanjut coba URL lain, tapi semuanya belum memberi format RECAP yang valid.");
+        }
+
+        throw lastError || new Error("Gagal membaca sheet recap.");
+      }
+
+      function monthMeta(cell) {
+        const key = normalize(cell);
+        return MONTHS.find((month) => month.aliases.includes(key));
+      }
+
+      function findRankingColumns(rows) {
+        for (let i = 0; i < Math.min(rows.length, 30); i++) {
+          const normalized = rows[i].map(normalize);
+          const nameCol = normalized.findIndex((x) => x === "nama");
+          const totalCol = normalized.findIndex((x) => x === "total");
+          if (nameCol !== -1 && totalCol !== -1) {
+            return { headerIndex: i, nameCol, totalCol };
+          }
+        }
         return null;
       }
 
-      function getCurrentDataset() {
-        return state.view === "recap" ? state.recapRows : state.rankingRows;
+      function findRecapColumns(rows) {
+        let best = null;
+
+        for (let i = 0; i < Math.min(rows.length, 50); i++) {
+          const headerA = rows[i] || [];
+          const headerB = rows[i + 1] || [];
+          const normalizedA = headerA.map(normalize);
+          const normalizedB = headerB.map(normalize);
+          const maxLen = Math.max(headerA.length, headerB.length);
+
+          const rowANameCol = normalizedA.findIndex((x) => x === "nama");
+          const rowBNameCol = normalizedB.findIndex((x) => x === "nama");
+          const nameCol = rowANameCol !== -1 ? rowANameCol : rowBNameCol;
+          if (nameCol === -1) continue;
+
+          const rowATotalCol = normalizedA.findIndex((x) => x === "total");
+          const rowBTotalCol = normalizedB.findIndex((x) => x === "total");
+          const totalCol = rowATotalCol !== -1 ? rowATotalCol : rowBTotalCol;
+
+          const monthCols = [];
+          let fromRowA = 0;
+          let fromRowB = 0;
+
+          for (let index = 0; index < maxLen; index++) {
+            const metaA = monthMeta(headerA[index]);
+            const metaB = monthMeta(headerB[index]);
+            const meta = metaA || metaB;
+            if (!meta) continue;
+            if (monthCols.some((item) => item.key === meta.key)) continue;
+            monthCols.push({ ...meta, index });
+            if (metaA) fromRowA += 1;
+            if (!metaA && metaB) fromRowB += 1;
+          }
+
+          const usesSecondHeaderRow =
+            monthCols.length > 0 &&
+            fromRowB >= fromRowA &&
+            rowANameCol !== -1 &&
+            (rowATotalCol !== -1 || normalize(headerA[nameCol]) === "nama");
+
+          const dataStartIndex = i + (usesSecondHeaderRow ? 2 : 1);
+          const score =
+            monthCols.length * 100 +
+            (totalCol !== -1 ? 20 : 0) +
+            (usesSecondHeaderRow ? 15 : 0) +
+            (monthCols.length >= 12 ? 50 : 0);
+
+          if ((monthCols.length >= 3 || (monthCols.length >= 1 && totalCol !== -1)) && (!best || score > best.score)) {
+            best = {
+              score,
+              headerIndex: i,
+              dataStartIndex,
+              nameCol,
+              totalCol,
+              monthCols,
+              usesSecondHeaderRow,
+              lastMonthIndex: monthCols.reduce((max, item) => Math.max(max, item.index), -1),
+            };
+          }
+        }
+
+        return best;
       }
 
-      function getActiveMetricLabel() {
-        if (state.view === "ranking") return "Total";
-        if (state.selectedMonth === "total") return "1 Tahun";
+      function renderMonthOptions() {
+        monthSelect.innerHTML = "";
 
-        const found = state.recapMonths.find((item) => item.key === state.selectedMonth);
-        return found ? found.label : "Jumlah";
+        const totalOption = document.createElement("option");
+        totalOption.value = "total";
+        totalOption.textContent = "1 Tahun";
+        monthSelect.appendChild(totalOption);
+
+        state.recapMonths.forEach((month) => {
+          const option = document.createElement("option");
+          option.value = month.key;
+          option.textContent = month.label;
+          monthSelect.appendChild(option);
+        });
+
+        if (!monthSelect.querySelector(`option[value="${state.selectedMonth}"]`)) {
+          state.selectedMonth = "total";
+        }
+        monthSelect.value = state.selectedMonth;
       }
 
-      function getValueForRow(row) {
+      function getCurrentRows() {
+        return state.view === "ranking" ? state.rankingRows : state.recapRows;
+      }
+
+      function getCurrentValue(row) {
         if (state.view === "recap") {
           if (state.selectedMonth === "total") return row.total || 0;
           return row.months?.[state.selectedMonth] || 0;
@@ -567,306 +880,301 @@
         return row.total || 0;
       }
 
-      function updateTopText() {
-        const isRecap = state.view === "recap";
-        const monthLabel = getActiveMetricLabel();
+      function getCurrentFilterLabel() {
+        if (state.view === "ranking") return "Total";
+        if (state.selectedMonth === "total") return "1 Tahun";
+        const found = state.recapMonths.find((item) => item.key === state.selectedMonth);
+        return found ? found.label : "1 Tahun";
+      }
 
-        pageTitle.textContent = isRecap ? "RECAP" : "RANKING";
+      function updateHeaderTexts() {
+        const filterLabel = getCurrentFilterLabel();
 
-        if (isRecap) {
-          subtitle.textContent =
-            state.mode === "terlambat"
-              ? `Recap Terbanyak - ${monthLabel}`
-              : `Recap Terkecil - ${monthLabel}`;
+        pageTitle.textContent = state.view === "ranking" ? "RANKING" : "RECAP";
 
-          hintText.innerHTML =
-            "<strong>Catatan:</strong> Tombol Recap mengambil data dari sheet recap dan tetap bisa difilter berdasarkan bulan atau 1 tahun.";
-        } else {
+        if (state.view === "ranking") {
           subtitle.textContent =
             state.mode === "terlambat"
               ? "Ranking Paling Terlambat"
               : "Ranking Paling Rajin";
-
           hintText.innerHTML =
             "<strong>Catatan:</strong> Data ranking berubah maksimal 3 menit setelah perubahan data admin.";
+        } else {
+          subtitle.textContent =
+            state.mode === "terlambat"
+              ? `Ranking Recap Terbanyak - ${filterLabel}`
+              : `Ranking Recap Terkecil - ${filterLabel}`;
+          hintText.innerHTML =
+            "<strong>Catatan:</strong> Tombol recap mengambil data dari sheet recap dan bisa difilter per bulan atau 1 tahun.";
         }
       }
 
-      function updateControls() {
+      function updateButtons() {
         btnViewRanking.classList.toggle("active", state.view === "ranking");
         btnViewRecap.classList.toggle("active", state.view === "recap");
         btnTerlambat.classList.toggle("active", state.mode === "terlambat");
         btnRajin.classList.toggle("active", state.mode === "rajin");
-        monthControl.classList.toggle("hidden", state.view !== "recap");
-        monthSelect.value = state.selectedMonth;
-        updateTopText();
+        monthWrap.classList.toggle("hidden", state.view !== "recap");
       }
 
-      function renderSummary(rows) {
-        const activeLabel = getActiveMetricLabel();
-        const totalUsers = rows.length;
-        const visibleNonZero = rows.filter((row) => getValueForRow(row) > 0).length;
-        const totalValue = rows.reduce((sum, row) => sum + getValueForRow(row), 0);
+      function updateStats(rows) {
+        const values = rows.map((row) => getCurrentValue(row));
+        const totalNilai = values.reduce((sum, value) => sum + value, 0);
 
-        summaryEl.innerHTML = `
-          <div class="summaryCard">
-            <small>Tampilan</small>
-            <strong>${state.view === "recap" ? "Recap" : "Ranking"}</strong>
-          </div>
-          <div class="summaryCard">
-            <small>Filter</small>
-            <strong>${activeLabel}</strong>
-          </div>
-          <div class="summaryCard">
-            <small>Total User</small>
-            <strong>${formatNumber(totalUsers)}</strong>
-          </div>
-          <div class="summaryCard">
-            <small>Total Nilai</small>
-            <strong>${formatNumber(totalValue)}</strong>
-          </div>
-          <div class="summaryCard">
-            <small>User dengan data</small>
-            <strong>${formatNumber(visibleNonZero)}</strong>
-          </div>
-        `;
+        statView.textContent = state.view === "ranking" ? "Ranking" : "Recap";
+        statFilter.textContent = getCurrentFilterLabel();
+        statUsers.textContent = formatNumber(rows.length);
+        statTotal.textContent = formatNumber(totalNilai);
       }
 
-      function renderStatus(rows) {
-        const sourceLabel = state.view === "recap" ? "sheet recap" : "sheet ranking";
-        const activeLabel = getActiveMetricLabel();
-        const time = state.loadedAt
+      function updateStatus(rows) {
+        const currentError = state.view === "ranking" ? state.rankingError : state.recapError;
+        const currentLoading = state.view === "ranking" ? state.rankingLoading : state.recapLoading;
+        const sourceName = state.view === "ranking" ? state.rankingSourceLabel : state.recapSourceLabel;
+
+        if (currentLoading) {
+          statusEl.innerHTML =
+            '<span class="pill"><i class="ph ph-circle-notch spin"></i> Memuat data...</span>';
+          return;
+        }
+
+        if (currentError) {
+          statusEl.innerHTML =
+            `<span class="pill"><i class="ph ph-warning-circle"></i> ${currentError}</span>`;
+          return;
+        }
+
+        const timeLabel = state.loadedAt
           ? new Date(state.loadedAt).toLocaleTimeString("id-ID", {
               hour: "2-digit",
               minute: "2-digit",
+              second: "2-digit",
             })
           : "-";
 
-        statusEl.innerHTML = `
-          <span class="pill">
-            <i class="ph ph-database"></i>
-            Sumber: ${sourceLabel} | Filter: ${activeLabel} | Data user: ${rows.length} | Update tampilan: ${time}
-          </span>
-        `;
+        statusEl.innerHTML =
+          `<span class="pill"><i class="ph ph-database"></i> Sumber: ${sourceName} | Filter: ${getCurrentFilterLabel()} | Data user: ${rows.length} | Update tampilan: ${timeLabel}</span>`;
       }
 
-      function renderEmpty(message) {
-        tbody.innerHTML = `
-          <tr class="tableHead">
-            <td>Rank</td>
-            <td>Nama</td>
-            <td>${getActiveMetricLabel()}</td>
-          </tr>
-          <tr>
-            <td colspan="3">${message}</td>
-          </tr>
-        `;
-      }
+      function renderTable() {
+        updateButtons();
+        updateHeaderTexts();
 
-      function renderTable(rows) {
+        const sourceRows = getCurrentRows();
+        const sorted = [...sourceRows].sort((a, b) => {
+          const valueA = getCurrentValue(a);
+          const valueB = getCurrentValue(b);
+
+          if (state.mode === "terlambat") {
+            if (valueB !== valueA) return valueB - valueA;
+          } else {
+            if (valueA !== valueB) return valueA - valueB;
+          }
+
+          return (a.name || "").localeCompare(b.name || "", "id");
+        });
+
         tbody.innerHTML = "";
 
-        const header = document.createElement("tr");
-        header.className = "tableHead";
-        header.innerHTML = `
-          <td>Rank</td>
-          <td>Nama</td>
-          <td>${getActiveMetricLabel()}</td>
+        const headerRow = document.createElement("tr");
+        headerRow.innerHTML = `
+          <td class="number">RANK</td>
+          <td class="name">NAMA</td>
+          <td class="points">${getCurrentFilterLabel().toUpperCase()}</td>
         `;
-        tbody.appendChild(header);
+        tbody.appendChild(headerRow);
 
-        rows.forEach((row, index) => {
+        if (!sorted.length) {
+          const emptyRow = document.createElement("tr");
+          emptyRow.innerHTML =
+            '<td colspan="3" class="mutedText">Belum ada data yang bisa ditampilkan.</td>';
+          tbody.appendChild(emptyRow);
+          updateStats([]);
+          updateStatus([]);
+          return;
+        }
+
+        sorted.forEach((row, index) => {
           const rank = index + 1;
-          const value = getValueForRow(row);
           const medal = medalForRank(rank);
+          const value = getCurrentValue(row);
 
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td class="number">${rank}</td>
             <td class="name">${row.name}</td>
             <td class="points">
-              <span>${formatNumber(value)}</span>
-              ${medal ? `<span class="medal" title="Top ${rank}">${medal}</span>` : ""}
+              <div class="pointsWrap">
+                <span>${formatNumber(value)}</span>
+                ${medal ? `<span class="medal" title="Top ${rank}">${medal}</span>` : ""}
+              </div>
             </td>
           `;
           tbody.appendChild(tr);
         });
-      }
 
-      function render() {
-        updateControls();
-
-        const rows = [...getCurrentDataset()].sort((a, b) => {
-          const valueA = getValueForRow(a);
-          const valueB = getValueForRow(b);
-          if (state.mode === "terlambat") {
-            if (valueB !== valueA) return valueB - valueA;
-          } else {
-            if (valueA !== valueB) return valueA - valueB;
-          }
-          return a.name.localeCompare(b.name, "id");
-        });
-
-        renderSummary(rows);
-        renderStatus(rows);
-
-        if (!rows.length) {
-          renderEmpty("Belum ada data yang bisa ditampilkan.");
-          return;
-        }
-
-        renderTable(rows);
-      }
-
-      function populateMonthOptions(months) {
-        const options = [{ key: "total", label: "1 Tahun" }, ...months];
-        monthSelect.innerHTML = options
-          .map((item) => `<option value="${item.key}">${item.label}</option>`)
-          .join("");
+        updateStats(sorted);
+        updateStatus(sorted);
       }
 
       async function loadRankingData() {
-        const csvUrl = pubhtmlToCsv(RANKING_SHEET_URL);
-        const res = await fetch(csvUrl, { cache: "no-store" });
-        if (!res.ok) throw new Error("Gagal fetch ranking CSV: " + res.status);
+        state.rankingLoading = true;
+        state.rankingError = "";
+        renderTable();
 
-        const text = await res.text();
-        const rows = parseCSV(text);
-        if (!rows.length) throw new Error("CSV ranking kosong");
-
-        const found = findColumns(rows, ["nama", "total"]);
-        if (!found) {
-          throw new Error("Header ranking tidak ditemukan. Pastikan ada kolom NAMA dan TOTAL.");
-        }
-
-        const { headerIndex, columns } = found;
-        const dataRows = rows.slice(headerIndex + 1);
-        const map = new Map();
-
-        for (const row of dataRows) {
-          const name = (row[columns.nama] ?? "").trim();
-          if (!name) continue;
-
-          const total = parseNumber(row[columns.total]);
-          const key = name.toLowerCase();
-          const current = map.get(key);
-
-          if (!current || total > current.total) {
-            map.set(key, { name, total });
+        try {
+          const result = await fetchSheetRows(RANKING_PUBHTML_URL, { baseLabel: "sheet ranking" });
+          const rows = result.rows;
+          const info = findRankingColumns(rows);
+          if (!info) {
+            throw new Error("Header ranking tidak ditemukan. Pastikan ada kolom NAMA dan TOTAL.");
           }
-        }
 
-        return Array.from(map.values());
-      }
+          const bestMap = new Map();
 
-      async function loadRecapData() {
-        const csvUrl = pubhtmlToCsv(RECAP_SHEET_URL);
-        const res = await fetch(csvUrl, { cache: "no-store" });
-        if (!res.ok) throw new Error("Gagal fetch recap CSV: " + res.status);
+          rows.slice(info.dataStartIndex || info.headerIndex + 1).forEach((row) => {
+            const name = cleanCell(row[info.nameCol]);
+            if (!name) return;
 
-        const text = await res.text();
-        const rows = parseCSV(text);
-        if (!rows.length) throw new Error("CSV recap kosong");
-
-        const found = findColumns(rows, ["nama"]);
-        if (!found) {
-          throw new Error("Header recap tidak ditemukan. Pastikan ada kolom NAMA.");
-        }
-
-        const { headerIndex, header, columns } = found;
-        const totalCol = header.findIndex((cell) => normalize(cell) === "total");
-        const monthColumns = [];
-
-        header.forEach((cell, index) => {
-          const monthMeta = getMonthMeta(cell);
-          if (monthMeta) {
-            monthColumns.push({
-              key: monthMeta.key,
-              label: monthMeta.label,
-              index,
-            });
-          }
-        });
-
-        if (!monthColumns.length) {
-          throw new Error("Kolom bulan di sheet recap tidak ditemukan.");
-        }
-
-        const dataRows = rows.slice(headerIndex + 1);
-        const map = new Map();
-
-        for (const row of dataRows) {
-          const name = (row[columns.nama] ?? "").trim();
-          if (!name) continue;
-
-          const months = {};
-          let calculatedTotal = 0;
-
-          monthColumns.forEach((month) => {
-            const value = parseNumber(row[month.index]);
-            months[month.key] = value;
-            calculatedTotal += value;
+            const total = parseNumber(row[info.totalCol]);
+            const key = normalize(name);
+            const current = bestMap.get(key);
+            if (!current || total > current.total) {
+              bestMap.set(key, { name, total });
+            }
           });
 
-          const total = totalCol !== -1 ? parseNumber(row[totalCol]) || calculatedTotal : calculatedTotal;
-          map.set(name.toLowerCase(), { name, total, months });
-        }
-
-        return {
-          rows: Array.from(map.values()),
-          months: monthColumns,
-        };
-      }
-
-      async function loadData() {
-        try {
-          statusEl.innerHTML = `<span class="pill"><i class="ph ph-circle-notch"></i> Memuat data...</span>`;
-
-          const [rankingResult, recapResult] = await Promise.all([loadRankingData(), loadRecapData()]);
-
-          state.rankingRows = rankingResult;
-          state.recapRows = recapResult.rows;
-          state.recapMonths = recapResult.months;
+          state.rankingRows = Array.from(bestMap.values());
+          state.rankingLoaded = true;
+          state.rankingSourceLabel = result.sourceLabel || "sheet ranking";
           state.loadedAt = Date.now();
-
-          populateMonthOptions(state.recapMonths);
-          render();
         } catch (error) {
           console.error(error);
-          summaryEl.innerHTML = "";
-          renderEmpty("Gagal memuat data. Cek publish-to-web pada sheet ranking dan recap.");
-          statusEl.innerHTML = `
-            <span class="pill">
-              <i class="ph ph-warning-circle"></i>
-              Gagal memuat data. Pastikan link publish-to-web aktif dan bisa diakses publik.
-            </span>
-          `;
+          state.rankingRows = [];
+          state.rankingError = "Gagal memuat data ranking. Cek publish-to-web pada sheet ranking.";
+          state.rankingSourceLabel = "sheet ranking";
+        } finally {
+          state.rankingLoading = false;
+          renderTable();
         }
       }
 
-      btnViewRanking.addEventListener("click", () => {
-        state.view = "ranking";
-        render();
-      });
+      async function loadRecapData(forceReload = false) {
+        if (state.recapLoading) return;
+        if (state.recapLoaded && !forceReload) {
+          renderTable();
+          return;
+        }
 
-      btnViewRecap.addEventListener("click", () => {
-        state.view = "recap";
-        render();
-      });
+        state.recapLoading = true;
+        state.recapError = "";
+        renderTable();
 
-      btnTerlambat.addEventListener("click", () => {
-        state.mode = "terlambat";
-        render();
-      });
+        try {
+          const result = await fetchSheetRowsValidated(
+            [
+              RECAP_DIRECT_TSV_URL,
+              RECAP_TSV_URL,
+              RECAP_TSV_URL_ALT,
+              RECAP_CSV_URL,
+              RECAP_CSV_URL_ALT,
+              RECAP_EDIT_URL,
+              RECAP_PUBHTML_URL,
+            ],
+            {
+              baseLabel: "sheet recap",
+              gid: "949865330",
+            }
+          );
 
-      btnRajin.addEventListener("click", () => {
-        state.mode = "rajin";
-        render();
-      });
+          const rows = result.rows;
+          const info = result.info;
+
+          state.recapMonths = info.monthCols.map((item) => ({ key: item.key, label: item.label }));
+          renderMonthOptions();
+
+          const map = new Map();
+
+          rows.slice(info.dataStartIndex || info.headerIndex + 1).forEach((row) => {
+            const name = cleanCell(row[info.nameCol]);
+            if (!name) return;
+
+            const monthValues = {};
+            let sumMonths = 0;
+
+            info.monthCols.forEach((month) => {
+              const value = parseNumber(row[month.index]);
+              monthValues[month.key] = value;
+              sumMonths += value;
+            });
+
+            let total = sumMonths;
+            if (info.totalCol !== -1 && info.totalCol > (info.lastMonthIndex ?? -1)) {
+              total = parseNumber(row[info.totalCol]);
+            } else if ((info.lastMonthIndex ?? -1) + 1 < row.length) {
+              const trailingCells = row.slice((info.lastMonthIndex ?? -1) + 1).map(parseNumber).filter((value) => value || value === 0);
+              if (trailingCells.length) total = trailingCells[trailingCells.length - 1];
+            }
+            const key = normalize(name);
+
+            if (!map.has(key)) {
+              map.set(key, {
+                name,
+                total,
+                months: monthValues,
+              });
+              return;
+            }
+
+            const existing = map.get(key);
+            existing.total += total;
+            info.monthCols.forEach((month) => {
+              existing.months[month.key] =
+                (existing.months[month.key] || 0) + (monthValues[month.key] || 0);
+            });
+          });
+
+          state.recapRows = Array.from(map.values()).filter((item) => item.name);
+          state.recapLoaded = true;
+          state.recapSourceLabel = result.sourceLabel || "sheet recap";
+          state.loadedAt = Date.now();
+        } catch (error) {
+          console.error(error);
+          state.recapRows = [];
+          state.recapMonths = [];
+          renderMonthOptions();
+          state.recapError = error?.message && /publish|dipublish|sheet lain|Header recap|sheet default|RECAP|format/i.test(error.message)
+            ? error.message
+            : "Gagal memuat data recap. Pastikan link TSV/CSV RECAP aktif dan bisa diakses publik.";
+          state.recapSourceLabel = "sheet recap";
+        } finally {
+          state.recapLoading = false;
+          renderTable();
+        }
+      }
+
+      function setMode(mode) {
+        state.mode = mode;
+        renderTable();
+      }
+
+      function setView(view) {
+        state.view = view;
+        renderTable();
+
+        if (view === "recap") {
+          loadRecapData(Boolean(state.recapError));
+        }
+      }
+
+      btnViewRanking.addEventListener("click", () => setView("ranking"));
+      btnViewRecap.addEventListener("click", () => setView("recap"));
+      btnTerlambat.addEventListener("click", () => setMode("terlambat"));
+      btnRajin.addEventListener("click", () => setMode("rajin"));
 
       monthSelect.addEventListener("change", (event) => {
-        state.selectedMonth = event.target.value;
-        render();
+        state.selectedMonth = event.target.value || "total";
+        renderTable();
       });
 
       btnShare.addEventListener("click", async () => {
@@ -876,9 +1184,9 @@
             await navigator.share({ title: document.title, url });
           } else if (navigator.clipboard) {
             await navigator.clipboard.writeText(url);
-            btnShare.innerHTML = `<i class="ph ph-check"></i>`;
+            btnShare.innerHTML = '<i class="ph ph-check"></i>';
             setTimeout(() => {
-              btnShare.innerHTML = `<i class="ph ph-share-network"></i>`;
+              btnShare.innerHTML = '<i class="ph ph-share-network"></i>';
             }, 1200);
           } else {
             prompt("Copy link:", url);
@@ -888,7 +1196,8 @@
         }
       });
 
-      loadData();
+      renderTable();
+      loadRankingData();
     </script>
   </body>
 </html>
